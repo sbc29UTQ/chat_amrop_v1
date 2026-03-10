@@ -73,6 +73,7 @@ def generar_keywords(
     # (evita re-parseo frágil de texto en NavigationAgent)
     tool_context.state["_nav_queries"] = queries
     tool_context.state["_nav_index"] = 0
+    tool_context.state["_nav_results"] = []
 
     return {
         "queries": queries,       # Lista de queries listas para usar en Google
