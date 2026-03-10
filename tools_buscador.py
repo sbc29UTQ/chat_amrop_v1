@@ -78,3 +78,34 @@ def generar_keywords(
         "queries": queries,       # Lista de queries listas para usar en Google
         "total":   len(queries),  # Cantidad de queries generadas
     }
+
+
+# ---------------------------------------------------------------------------
+# Tool: reset_nav_state
+#
+# ¿Qué hace?
+#   Limpia el estado de navegación previo (_nav_queries, _nav_index,
+#   _nav_results) para evitar que NavigationAgent procese queries obsoletas
+#   de una sesión anterior cuando no hay nombres válidos en el turno actual.
+#
+# ¿Cuándo llamarla?
+#   KeywordGenAgent la invoca cuando decide que search_output NO contiene
+#   nombres reales (saludo, pregunta, vacío). Así NavigationAgent siempre
+#   arranca con estado limpio.
+# ---------------------------------------------------------------------------
+
+def reset_nav_state(tool_context: ToolContext) -> dict:
+    """
+    Limpia el estado de navegación: _nav_queries, _nav_index y _nav_results.
+
+    Llamar cuando no hay nombres válidos para que NavigationAgent no herede
+    queries de una sesión anterior.
+
+    Retorna:
+        dict con reset=True como confirmación.
+    """
+    tool_context.state["_nav_queries"] = []
+    tool_context.state["_nav_index"] = 0
+    tool_context.state["_nav_results"] = []
+
+    return {"reset": True}
