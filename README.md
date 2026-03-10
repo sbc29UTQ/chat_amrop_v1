@@ -1,156 +1,98 @@
-# chat_amrop_v1
-
----
-
 # 🔎 LinkedIn Discovery Multi-Agent
 
 Sistema **multi-agente en Python** que permite descubrir perfiles de **LinkedIn** a partir de una consulta del usuario.
 
-El sistema:
+El sistema realiza automáticamente:
 
-1. Busca personas en Google
-2. Genera queries optimizadas para LinkedIn
-3. Navega automáticamente en Google
-4. Extrae URLs de perfiles encontrados
+1. Buscar personas en Google
+2. Generar búsquedas optimizadas para LinkedIn
+3. Navegar en Google
+4. Extraer perfiles de LinkedIn
 
-El resultado final es un **reporte con perfiles de LinkedIn descubiertos**.
+El resultado final es un **reporte con perfiles encontrados**.
 
 ---
 
-# 🧠 Arquitectura
+# 🧠 Flujo del sistema:
 
-El sistema usa **Google ADK** para coordinar agentes de IA.
+1. **SearchAgent** → busca nombres de personas
+2. **KeywordGenAgent** → genera queries de LinkedIn
+3. **NavigationAgent** → navega en Google y extrae perfiles
 
-```mermaid
-flowchart TD
+Los agentes son orquestados por un **SequentialAgent (Root Agent)**. 
 
-User[User Query]
+---
 
-User --> SearchAgent
-SearchAgent --> KeywordGenAgent
-KeywordGenAgent --> NavigationAgent
-NavigationAgent --> Report
+# 📦 Requisitos
+
+Antes de ejecutar el proyecto necesitas:
+
+* Python **3.10 o superior**
+* Chrome instalado
+* Acceso a Google Generative AI
+
+---
+
+# ⚙️ Instalación paso a paso
+
+## 1️⃣ Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-repo/linkedin-discovery-agent.git
+
+cd linkedin-discovery-agent
 ```
 
-Los agentes se ejecutan de forma **secuencial** mediante un **Root Agent**. 
+---
+
+## 2️⃣ Crear entorno virtual
+
+```bash
+python -m venv venv
+```
+
+Activar entorno:
+
+Mac / Linux
+
+```bash
+source venv/bin/activate
+```
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
 
 ---
 
-# ⚙️ Flujo del sistema
+## 3️⃣ Instalar dependencias
 
-### 1️⃣ Usuario realiza una consulta
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 🔑 Configurar variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto.
 
 Ejemplo:
 
-```
-Top gerentes de Antamina
-```
+```env
+# Clave de Google Generative AI
+GOOGLE_API_KEY=
 
----
+# Modelo Gemini utilizado por los agentes
+GOOGLE_GENAI_MODEL=gemini-2.5-flash
 
-### 2️⃣ SearchAgent
+# Usar Vertex AI o AI Studio
+GOOGLE_GENAI_USE_VERTEXAI=FALSE
 
-Busca en Google y extrae nombres de personas.
-
-Ejemplo de salida:
-
-```
-Luis Santivañez
-Abraham Chahuan
-Adolfo Heeren
-```
-
-Salida almacenada en:
-
-```
-search_output
-```
-
----
-
-### 3️⃣ KeywordGenAgent
-
-Convierte los nombres en **queries optimizadas para LinkedIn**.
-
-Ejemplo:
-
-```
-site:pe.linkedin.com/in "Luis Santivañez"
-site:pe.linkedin.com/in "Abraham Chahuan"
-```
-
-Las queries se guardan en el estado interno del agente para el proceso de navegación. 
-
----
-
-### 4️⃣ NavigationAgent
-
-Ejecuta las búsquedas en el navegador y extrae perfiles.
-
-Por cada query:
-
-1. Construye la URL de búsqueda
-2. Abre Google
-3. Extrae enlaces de LinkedIn
-4. Guarda resultados
-
----
-
-### 5️⃣ Reporte final
-
-El sistema genera un reporte con los perfiles encontrados.
-
-Ejemplo:
-
-```
-Luis Santivañez
-- linkedin.com/in/luis-santivanez-123
-- linkedin.com/in/luis-santivanez-456
-
-Abraham Chahuan
-- linkedin.com/in/abraham-chahuan-789
-```
-
----
-
-# 🤖 Agentes del sistema
-
-## SearchAgent
-
-Busca personas relacionadas con la consulta del usuario usando Google.
-
-Herramienta:
-
-```
-google_search
-```
-
----
-
-## KeywordGenAgent
-
-Convierte nombres en queries de búsqueda para LinkedIn.
-
-Herramientas:
-
-```
-generar_keywords
-reset_nav_state
-```
-
----
-
-## NavigationAgent
-
-Navega en Google y extrae URLs de perfiles LinkedIn.
-
-Herramientas principales:
-
-```
-build_google_search_url
-go_to_url
-extract_linkedin_profiles
-save_query_result
+# Si se establece en 1 se desactiva Selenium
+DISABLE_WEB_DRIVER=0
 ```
 
 ---
@@ -167,45 +109,89 @@ tools_navegacion.py
 .env
 ```
 
----
+Descripción:
 
-# 🛠 Tecnologías
-
-| Tecnología | Uso                     |
-| ---------- | ----------------------- |
-| Python     | Lenguaje principal      |
-| Google ADK | Orquestación de agentes |
-| Gemini     | Modelo LLM              |
-| Selenium   | Navegación automática   |
-| dotenv     | Variables de entorno    |
+| Archivo               | Función                                       |
+| --------------------- | --------------------------------------------- |
+| `agent.py`            | Define los agentes del sistema                |
+| `instructions.py`     | Prompts del sistema para cada agente          |
+| `tools_buscador.py`   | Generación de queries LinkedIn                |
+| `tools_navegacion.py` | Navegación en Google y extracción de perfiles |
 
 ---
 
-# 🔑 Variables de entorno
+# 🤖 Agentes del sistema
 
-Archivo `.env`
+## SearchAgent
+
+Busca personas relacionadas con la consulta del usuario usando Google.
+
+Salida esperada:
 
 ```
-GOOGLE_GENAI_MODEL=gemini-2.5-flash
-DISABLE_WEB_DRIVER=0
+Luis Santivañez
+Abraham Chahuan
+Adolfo Heeren
 ```
 
 ---
 
-# 🚀 Resultado
+## KeywordGenAgent
 
-Pipeline completo:
+Convierte los nombres encontrados en queries optimizadas para LinkedIn.
+
+Ejemplo generado:
 
 ```
-User Query
-   ↓
-SearchAgent
-   ↓
-KeywordGenAgent
-   ↓
-NavigationAgent
-   ↓
-LinkedIn Profiles Report
+site:pe.linkedin.com/in "Luis Santivañez"
+site:pe.linkedin.com/in "Abraham Chahuan"
+```
+
+Estas queries se almacenan en el estado interno del agente. 
+
+---
+
+## NavigationAgent
+
+Navega en Google y extrae URLs de perfiles LinkedIn.
+
+Por cada query:
+
+1. Construye la URL de búsqueda
+2. Abre Google en el navegador
+3. Extrae enlaces de LinkedIn
+4. Guarda resultados
+
+---
+
+# 🚀 Ejecutar el sistema
+
+Una vez configurado todo:
+
+```bash
+python main.py
+```
+
+Ejemplo de consulta:
+
+```
+Top gerentes de Antamina
+```
+
+---
+
+# 📄 Resultado
+
+El sistema devuelve un reporte con perfiles encontrados.
+
+Ejemplo:
+
+```
+Luis Santivañez
+- linkedin.com/in/luis-santivanez
+
+Abraham Chahuan
+- linkedin.com/in/abraham-chahuan
 ```
 
 ---
