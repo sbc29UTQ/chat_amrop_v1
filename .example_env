@@ -1,0 +1,11 @@
+# Clave de acceso a Google Generative AI
+GOOGLE_API_KEY=
+
+# Modelo Gemini utilizado por los agentes
+GOOGLE_GENAI_MODEL=gemini-2.5-flash
+
+# Indica si se usa Vertex AI
+GOOGLE_GENAI_USE_VERTEXAI=FALSE
+
+# Si se establece en 1 se desactiva Selenium (modo debug)
+DISABLE_WEB_DRIVER=0
