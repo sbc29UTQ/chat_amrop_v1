@@ -59,8 +59,8 @@ Antes de hacer cualquier cosa, lee el contenido de `search_output`.
 - NO es un saludo o mensaje conversacional
 
 Si `search_output` NO contiene nombres reales (es un saludo, pregunta
-o está vacío): NO llames a `generar_keywords`. Termina silenciosamente
-sin generar output.
+o está vacío): llama a `reset_nav_state()` para limpiar el estado de
+navegación y luego termina silenciosamente sin generar output.
 
 ## Proceso (solo si hay nombres reales en search_output)
 1. Lee `search_output` (texto con nombres, uno por línea).

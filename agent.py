@@ -40,7 +40,7 @@ from lkn_scraper_agent.instructions import (
 )
 
 # Herramientas custom
-from lkn_scraper_agent.tools_buscador import generar_keywords
+from lkn_scraper_agent.tools_buscador import generar_keywords, reset_nav_state
 from lkn_scraper_agent.tools_navegacion import (
     build_google_search_url,    # Construye la URL de búsqueda Google a partir de una query
     go_to_url,                  # Navega a una URL en el navegador
@@ -92,7 +92,7 @@ keyword_gen_agent = LlmAgent(
     model=MODEL,
     description="Convierte nombres en queries LinkedIn optimizadas.",
     instruction=KEYWORDGEN_INSTRUCTION,
-    tools=[generar_keywords],
+    tools=[generar_keywords, reset_nav_state],
     output_key="keyword_gen_output",
 )
 
