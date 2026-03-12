@@ -40,7 +40,7 @@ Antes de ejecutar el proyecto necesitas:
 ```bash
 git clone https://github.com/tu-repo/linkedin-discovery-agent.git
 
-cd linkedin-discovery-agent
+cd linkedin-scraper-agent
 ```
 
 ---
@@ -48,7 +48,7 @@ cd linkedin-discovery-agent
 ## 2️⃣ Crear entorno virtual
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 Activar entorno:
@@ -56,7 +56,7 @@ Activar entorno:
 Mac / Linux
 
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 Windows
@@ -101,7 +101,7 @@ DISABLE_WEB_DRIVER=0
 
 ```
 lkn_scraper_agent/
-
+__init__.py
 agent.py
 instructions.py
 tools_buscador.py
